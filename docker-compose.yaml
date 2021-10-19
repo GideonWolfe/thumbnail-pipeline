@@ -1,0 +1,50 @@
+version: '3'
+services:
+  influxdb:
+    image: arm32v7/influxdb
+    # restart: always
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=fathom
+      - INFLUXDB_HTTP_FLUX_ENABLED=true  
+    volumes:
+      - $PWD/influx/data:/var/lib/influxdb
+    networks:
+      - thumbnailpipeline
+
+  rtsp:
+    build: ./rtsp/rtsp-server
+    privileged: true
+    # restart: always
+    #network_mode: "host"
+    networks:
+      - thumbnailpipeline
+
+  backend:
+    build: backend
+    ports:
+      - 8787:8080
+    depends_on:
+      - "influxdb"
+    volumes:
+      - $PWD/feed_handler/fathom/images/:/usr/src/app/public/images/ #mounts our image output as static files for backend
+    networks:
+      - thumbnailpipeline
+
+  # moved to external source
+  #frontend:
+  #  build: frontend
+  #  ports:
+  #    - 7878:8080
+  #  depends_on:
+  #    - "influxdb"
+  #  volumes:
+  #    - $PWD/feed_handler/fathom/images/:/usr/src/app/images/ #mounts our image output as static files for backend
+
+
+# throw everything on the same network
+# so the service names resolve within containers
+networks:
+  thumbnailpipeline:
+    external: true
