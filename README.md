@@ -20,7 +20,7 @@ Once the thumbnail has been written, the filepath is written as a datapoint into
 
 ## influxDB
 
-InfluxDB is a time series database. For this demo I set up a "fathom" bucket with a measurement called "filepaths" to which the image filepaths are written by the `feed_handler`.
+InfluxDB is a time series database. For this demo I set up a "fathom" bucket with a measurement called "filepaths" to which the image filepaths are written by the `feed_handler`. No config necessary here, everything defined in the compose file. `./influx/data/` will be created to store influx data persistently. 
 
 ## backend
 
@@ -32,9 +32,11 @@ A `GET` request to `/thumnnailGroup?ts=<unixtimestamp>` should yeild a group of 
 
 These requests are completed by taking in the URL parameters enumerated above and formulating a query string using InfluxDB's Flux query language.
 
+Known issues
+
+* InfluxDB is still misbehaving with timestamps so filtering by timestamp either breaks it or returns every image... Still need to work on that
+* Some endpoints are still using test values to return **something**, so I still have to clean that up
+
 ## frontend
 
-This is an example implementation of a dashboard that could contain multiple thumbnails representing video clips. Theoretically this could run anywhere (such as client servers) and make API requests to the pi. Since i'm running it off the pi, image requests are pretty quick.
-
-
-
+This is an example implementation of a dashboard that could contain multiple thumbnails representing video clips. The `frontend` folder contains its own `docker-compose.yml` file so it can be brought up on another system (I used my local dev machine).
