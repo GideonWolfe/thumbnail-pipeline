@@ -18,6 +18,8 @@ This script is responsible for performing any tasks that should be constanly run
 
 Once the thumbnail has been written, the filepath is written as a datapoint into InfluxDB along with a timestamp and location of the camera (we would definitely want more metrics here)
 
+This is not currently dockerized because I don't want to constantly be recording images during testing. When I want to record, I just manually run `python3 rtsp-handler.py`. Could easily be dockerized in the future.
+
 ## influxDB
 
 InfluxDB is a time series database. For this demo I set up a "fathom" bucket with a measurement called "filepaths" to which the image filepaths are written by the `feed_handler`. No config necessary here, everything defined in the compose file. `./influx/data/` will be created to store influx data persistently. 
