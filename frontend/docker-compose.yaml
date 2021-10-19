@@ -1,0 +1,6 @@
+version: '3'
+services:
+  frontend:
+    build: simple-frontend
+    ports:
+      - 7878:8080
