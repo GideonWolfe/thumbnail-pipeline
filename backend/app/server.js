@@ -22,7 +22,8 @@ app.use(express.static('public'))
 app.use(cors())
 
 // Timestamps don't work :(
-// main route to fetch thumbnail
+// main route to fetch thumbnail filepath
+// would be used to load preview as page is loading
 app.get('/thumbnail', (req, res, next) => {
 
   // get query params from URL
@@ -48,6 +49,7 @@ app.get('/thumbnail', (req, res, next) => {
 
 // Timestamps don't work :(
 // endpoint that returns group of filepaths
+// Input a range to get range of filepaths within timestamp
 app.get('/thumbnailGroup', (req, res, next) => {
 
   // get query params from URL and convert and create date objects
@@ -81,9 +83,11 @@ app.get('/thumbnailGroup', (req, res, next) => {
 
 // Timestamps don't work :(
 // same as above, but has a replacement step to fix filepaths.
+// removes absolute path before /images/ so they can be served by express
 app.get('/thumbnailGroupReplaced', (req, res, next) => {
 
   // get query params from URL and convert and create date objects
+  // This is the buggy part I think since InfluxDB complains about timestamps
   var minTime = req.query.ts // this is the STARTING timestamp
   var minDate  = new Date(parseInt(minTime))
   const endDate = new Date(minDate.getTime() + 5*60000)
@@ -119,43 +123,6 @@ app.get('/thumbnailGroupReplaced', (req, res, next) => {
   })
 
 })
-
-// endpoint that returns group of images
-app.get('/thumbnailImages', (req, res, next) => {
-
-  var imageArray = []
-
-  // get query params from URL and convert and create date objects
-  var minTime = req.query.ts // this is the STARTING timestamp
-  var minDate  = new Date(parseInt(minTime))
-  const endDate = new Date(minDate.getTime() + 5*60000)
-  console.log("min date is "+minDate)
-  console.log("end date is "+endDate)
-  
-  // filters to the measurement of interest (filepaths to us)
-  // time range doesn't throw errors but doesn't seem to work
-  const funcQuery = 'from(bucket: "fathom") |> range(start: '+minDate.getTime()+', stop: '+endDate.getTime()+') |> filter(fn: (r) => r._measurement == "filepaths")'
-  console.log('query: '+funcQuery)
-
-  // returns a promise
-  return queryApi
-  .collectRows(funcQuery /*, you can specify a row mapper as a second arg */)
-  .then(data => {
-    //console.log(data)
-    const filePathsAsUrls = data.map(item => {
-	imageArray.push(item.filepath)
-    })
-    //return res.status(200).send(filePathsAsUrls)
-    return res.status(200).send(imageArray)
-  })
-  .catch(error => {
-    console.error(error)
-    console.log('Collect ROWS ERROR')
-    return res.status(500).send(error)
-  })
-
-})
-
 
 // this was a function given to me that uses await
 // I want to try and use it
