@@ -102,20 +102,6 @@ class DatabaseConnection():
         # Construct our data based on inputs
         dataDict = ['filepaths,location='+camLocation+',filepath='+imgfilepath+' camId='+str(camId)]
 
-
-        # WHY WONT THIS WORK GOD DAMNIT
-        testString = "{measurement},path={path} {timestamp}".format(
-                measurement="filepaths",
-                path=imgfilepath,
-                timestamp=int(time.time() * 1000))
-
-        # This seems to work without the timestamp
-        workingString = "{measurement},location={location},filepath={filepath} camId={camId}".format(
-                measurement="filepaths",
-                filepath=imgfilepath,
-                location=camLocation,
-                camId=camId)
-
         
         #unix_timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')     
         unix_timestamp = int(time.time() * 1000)
@@ -143,7 +129,7 @@ if __name__ == '__main__':
     # Global config values
     clientname = "fathom"
 
-    src = 'rtsp://10.0.0.228:8554/test'
+    src = 'rtsp://10.0.0.228:8554/test' # PUT THE ADDRESS OF YOUR PI HERE
     #  src = 'rtsp://127.0.0.1:8554/test'
 
     # Where photos from stream will be saved
