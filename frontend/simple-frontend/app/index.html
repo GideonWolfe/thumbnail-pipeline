@@ -20,17 +20,19 @@
             // range conversion system for mouse percent into indices
             var oldMax = 1;
             var oldMin = 0;
-            var newMax = 52; // magic number, how many thumbnails we can scroll
+	    // magic number, how many thumbnails we can scroll 
+            var newMax = 52; // should be set to how many images you're expecting to have
             var newMin = 0;
             var oldRange = (oldMax - oldMin);
             var newRange = (newMax - newMin);
+	    // Then we do some math to convert some percentage to an index between 0 and newMax-1, so we can index our images
             var mouseIndex = Math.floor((((mousePercent - oldMin) * newRange) / oldRange) + newMin);
             console.log('mouse index is '+mouseIndex)
 
             // if we have data back, update the image
             if(responseData !== undefined) {
                 let newPath = responseData[mouseIndex]['filepath']
-                let fullPath = "http://10.0.0.228:8787"+newPath
+                let fullPath = "http://10.0.0.228:8787"+newPath // Point the image source at the static files served by express backend
                 console.log(fullPath)
                 // we could add a counter here to only do a change if counter % x = 0
                 document.getElementById('freddi').src=fullPath
@@ -60,9 +62,6 @@
 	function getThumbsFetchPromiseAll(){
 		// test array with one request
 		// Since this is an "external dashboard" we request the public IP of the pi
-		//var testURL = "http://10.0.0.228:8787/thumbnailGroup?ts=1633803677170"
-		//var testURL = "http://10.0.0.228:8787/thumbnailImages?ts=1633803677170"
-		//var testURL = "http://10.0.0.228:8787/thumbnail?ts=Tahiti"
 		var testURL = "http://10.0.0.228:8787/thumbnailGroupReplaced?ts=Tahiti"
 		var urls = [testURL]
 		Promise.all(urls.map(u=>fetch(u))).then(responses =>
