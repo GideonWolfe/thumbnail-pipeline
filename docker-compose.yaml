@@ -32,17 +32,6 @@ services:
     networks:
       - thumbnailpipeline
 
-  # moved to external source
-  #frontend:
-  #  build: frontend
-  #  ports:
-  #    - 7878:8080
-  #  depends_on:
-  #    - "influxdb"
-  #  volumes:
-  #    - $PWD/feed_handler/fathom/images/:/usr/src/app/images/ #mounts our image output as static files for backend
-
-
 # throw everything on the same network
 # so the service names resolve within containers
 networks:
