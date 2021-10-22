@@ -42,5 +42,3 @@ Known issues
 ## frontend
 
 This is an example implementation of a dashboard that could contain multiple thumbnails representing video clips. The `frontend` folder contains its own `docker-compose.yml` file so it can be brought up on another system (I used my local dev machine).
-
-just run `node server.js`
